@@ -23,6 +23,18 @@ namespace apistation
             get { return new DataComponent(); }
         }
 
+        #region [ Functions ]
+        public string ClientRequestIdentity(Nancy.Request request)
+        {
+            var client_address = request.UserHostAddress.sha256_hash();
+            var client_request_path = request.Path.sha256_hash();
+            var client_identity = String.Format("{0}:{1}", client_address, client_request_path);
+
+            return client_identity;
+        }
+        #endregion
+
+        #region [ Constructor ]
         public ApiModule()
             : base("/api")
         {
@@ -73,5 +85,6 @@ namespace apistation
                 return Response.AsJson(model, HttpStatusCode.OK);
             };
         }
+        #endregion
     }
 }

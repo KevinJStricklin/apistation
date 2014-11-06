@@ -9,11 +9,35 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+
 namespace apistation
 {
+    public static class DataComponentExtenisions
+    {
+        public static String sha256_hash(this String value)
+        {
+            StringBuilder Sb = new StringBuilder();
+
+            using (SHA256 hash = SHA256Managed.Create())
+            {
+                Encoding enc = Encoding.UTF8;
+                Byte[] result = hash.ComputeHash(enc.GetBytes(value));
+
+                foreach (Byte b in result)
+                    Sb.Append(b.ToString("x2"));
+            }
+
+            return Sb.ToString();
+        }
+    }
+
     public class DataComponent
     {
         #region [ Fields ] 
+        
+        /// <summary>
+        /// In memory simple database
+        /// </summary>
         private static Dictionary<String, JObject> db = new Dictionary<string, JObject>();
         #endregion
 
@@ -81,6 +105,5 @@ namespace apistation
         }
         #endregion
     }
-
 
 }
