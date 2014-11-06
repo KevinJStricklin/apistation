@@ -13,9 +13,11 @@ namespace apistation
 {
     public class DataComponent
     {
+        #region [ Fields ] 
         private static Dictionary<String, JObject> db = new Dictionary<string, JObject>();
+        #endregion
 
-
+        #region [ Public Methods ] 
         public JObject Get(String path)
         {
             JObject results = new JObject();
@@ -77,6 +79,7 @@ namespace apistation
 
             return results;
         }
+        #endregion
     }
 
 
