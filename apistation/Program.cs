@@ -9,12 +9,14 @@ namespace apistation
 {
     public class Program
     {
+        public static ApiOptions Options = new ApiOptions();
+
         static void Main(string[] args)
         {
-            using (var host = new NancyHost(new Uri("http://localhost:1234")))
+            using (var host = new NancyHost(new Uri(Program.Options.HostUri)))
             {
                 host.Start();
-                Console.WriteLine("Hosting at http://localhost:1234");
+                Console.WriteLine("Hosting at {0}", Program.Options.HostUri);
                 Console.ReadLine();
             }
         }

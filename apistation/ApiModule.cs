@@ -36,7 +36,7 @@ namespace apistation
 
         #region [ Constructor ]
         public ApiModule()
-            : base("/api")
+            : base(Program.Options.BaseRoute)
         {
             string api_route = "/{path*}";
 
