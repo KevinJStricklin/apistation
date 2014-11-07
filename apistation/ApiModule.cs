@@ -18,6 +18,7 @@ namespace apistation
 
     public class ApiModule : NancyModule
     {
+
         private  DataComponent Data
         {
             get { return new DataComponent(); }
