@@ -31,7 +31,7 @@ namespace apistation
         }
     }
 
-    public class DataComponent
+    public class DataComponent : apistation.IDataComponent
     {
         #region [ Fields ] 
         

@@ -19,5 +19,10 @@ namespace apistation
         {
             get { return ConfigurationManager.AppSettings["host.uri"]; }
         }
+        
+        public String RedisHost
+        { 
+            get { return ConfigurationManager.AppSettings["redis.host"]; }
+        }
     }
 }
