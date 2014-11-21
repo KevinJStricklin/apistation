@@ -15,11 +15,13 @@ namespace apistation
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
     using Newtonsoft.Json.Linq;
+    using apistation.Components;
+    using apistation.Faults;
 
     public class ApiModule : NancyModule
     {
 
-        private  DataComponent Data
+        protected  DataComponent Data
         {
             get { return new DataComponent(); }
         }
@@ -36,8 +38,12 @@ namespace apistation
         #endregion
 
         #region [ Constructor ]
-        public ApiModule()
-            : base(Program.Options.BaseRoute)
+        /// <summary>
+        /// Optional parameter for using this module as a Base Class
+        /// </summary>
+        /// <param name="PathOverride"></param>
+        public ApiModule(String PathOverride = "" )
+            : base(Program.Options.BaseRoute + PathOverride)
         {
             string api_route = "/{path*}";
 
@@ -45,6 +51,10 @@ namespace apistation
             {
                 Hashtable model = new Hashtable();
                 JObject data = this.Data.Get(_.path);
+
+                // Log 
+                string path = _.path;
+                LogComponent.Log(path, Request);
 
                 model.Add("data", data);
                 return Response.AsJson(model, HttpStatusCode.OK);
@@ -54,7 +64,24 @@ namespace apistation
             {
                 Hashtable model = new Hashtable();
                 var results = new JObject();
-                var input_model = JObject.Parse(Request.Body.ReadAsString());
+                JObject input_model = new JObject();
+                
+                // Log 
+                string path = _.path;
+                LogComponent.Log(path, Request);
+
+                // Parse input model
+                try
+                {
+                    input_model = JObject.Parse(Request.Body.ReadAsString());
+                }
+                catch (Newtonsoft.Json.JsonException jsonError)
+                {
+                    var fault = new InputModelParsingFault(path, jsonError);
+                    LogComponent.Log(path, jsonError);
+                    model.Add("fault", JObject.FromObject(fault));
+                }
+                
 
                 results = this.Data.Post(_.path, input_model);
 
@@ -66,7 +93,23 @@ namespace apistation
             {
                 Hashtable model = new Hashtable();
                 var results = new JObject();
-                var input_model = JObject.Parse(Request.Body.ReadAsString());
+                JObject input_model = new JObject();
+
+                // Log 
+                string path = _.path;
+                LogComponent.Log(path, Request);
+
+                // Parse input model
+                try
+                {
+                    input_model = JObject.Parse(Request.Body.ReadAsString());
+                }
+                catch (Newtonsoft.Json.JsonException jsonError)
+                {
+                    var fault = new InputModelParsingFault(path, jsonError);
+                    LogComponent.Log(path, jsonError);
+                    model.Add("fault", JObject.FromObject(fault));
+                }
 
                 results = this.Data.Put(_.path, input_model);
 
@@ -78,7 +121,23 @@ namespace apistation
             {
                 Hashtable model = new Hashtable();
                 var results = new JObject();
-                var input_model = JObject.Parse(Request.Body.ReadAsString());
+                JObject input_model = new JObject();
+
+                // Log 
+                string path = _.path;
+                LogComponent.Log(path, Request);
+
+                // Parse input model
+                try
+                {
+                    input_model = JObject.Parse(Request.Body.ReadAsString());
+                }
+                catch (Newtonsoft.Json.JsonException jsonError)
+                {
+                    var fault = new InputModelParsingFault(path, jsonError);
+                    LogComponent.Log(path, jsonError);
+                    model.Add("fault", JObject.FromObject(fault));
+                }
 
                 results = this.Data.Delete(_.path, input_model);
 

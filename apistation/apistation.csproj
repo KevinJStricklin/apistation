@@ -56,12 +56,15 @@
   <ItemGroup>
     <Compile Include="ApiModule.cs" />
     <Compile Include="ApiOptions.cs" />
-    <Compile Include="DataComponent.cs" />
+    <Compile Include="Components\DataComponent.cs" />
+    <Compile Include="Components\LogComponent.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="IDataComponent.cs" />
+    <Compile Include="Components\IDataComponent.cs" />
+    <Compile Include="Faults\BaseFault.cs" />
+    <Compile Include="Faults\InputModelParsingFault.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RedisDataComponent.cs" />
+    <Compile Include="Components\RedisDataComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

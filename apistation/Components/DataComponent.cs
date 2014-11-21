@@ -8,10 +8,39 @@ using System.Security.Cryptography;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using apistation.Components;
 
 
 namespace apistation
 {
+   public class GetEventArgs : EventArgs
+    {
+        #region [ Properties ]
+        public JObject Model { get; private set; }
+
+        #endregion
+
+        #region [ Constructors ] 
+        public GetEventArgs(JObject Model) : base()
+        {
+            this.Model = Model;
+        }
+        #endregion
+    }
+    public class PostEventArgs : EventArgs
+    {
+        #region [ Properties ]
+        public JObject InputModel { get; private set; }
+        #endregion
+
+        #region [ Constructors ] 
+        public PostEventArgs(JObject InputModel) : base()
+        {
+            this.InputModel = InputModel;
+        }
+        #endregion
+    }
+
     public static class DataComponentExtenisions
     {
         public static String sha256_hash(this String value)
@@ -33,8 +62,29 @@ namespace apistation
 
     public class DataComponent : apistation.IDataComponent
     {
-        #region [ Fields ] 
-        
+        #region [ Events ] 
+        public event EventHandler<GetEventArgs> GetEvent;
+
+        public event EventHandler PostEvent;
+
+        public event EventHandler PutEvent;
+
+        public event EventHandler DeleteEvent;
+        #endregion
+
+        #region [ Event Methods ] 
+        protected virtual void OnGet(GetEventArgs args)
+        {
+            EventHandler<GetEventArgs> handler = GetEvent;
+
+            if (handler != null)
+            {
+                handler(this, args);
+            }
+        }
+        #endregion
+
+        #region [ Fields ]
         /// <summary>
         /// In memory simple database
         /// </summary>
@@ -45,6 +95,8 @@ namespace apistation
         public JObject Get(String path)
         {
             JObject results = new JObject();
+            // Log 
+            LogComponent.Log(path);
 
             if (db.ContainsKey(path))
             {
@@ -53,6 +105,7 @@ namespace apistation
             else
             {
                 db.Where(o => o.Key.StartsWith(path))
+                    .OrderBy(t => t.Key)
                     .ToList()
                     .ForEach(o =>
                     {
@@ -60,12 +113,17 @@ namespace apistation
                     });
             }
 
+            // Event 
+            OnGet(new GetEventArgs(results));
+
             return results;
         }
 
         public JObject Put(String path, JObject input_model)
         {
             JObject results = new JObject();
+            // Log 
+            LogComponent.Log(path, input_model);
 
             if (db.ContainsKey(path))
             {
@@ -78,6 +136,8 @@ namespace apistation
         public JObject Post(String path, JObject input_model)
         {
             JObject results = new JObject();
+            // Log 
+            LogComponent.Log(path, input_model);
 
             if (db.ContainsKey(path))
             {
@@ -95,6 +155,8 @@ namespace apistation
         public JObject Delete(String path, JObject input_model)
         {
             JObject results = new JObject();
+            // Log 
+            LogComponent.Log(path, input_model);
 
             if (db.ContainsKey(path))
             {
