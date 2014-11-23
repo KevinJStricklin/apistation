@@ -9,7 +9,7 @@ var express = require('express'),
 
 // levelDb 
 var levelup = require('levelup');
-var db = levelup('./sysdb');
+var db = levelup('./sysdb',{ valueEncoding: 'json'});
 
 
 // ---------------------------------------------------------------
@@ -37,8 +37,9 @@ app.get('/api/*', function(req, res) {
 		}
 
 		// Value
-		model.value = JSON.stringify(value);
+		model.value = value;
 
+		console.log("[GET] " + req.path + " == " + model.value);
 	  	// Build the response
 		res.type('application/json');
 		res.json(model);
@@ -46,9 +47,11 @@ app.get('/api/*', function(req, res) {
 });
 
 app.post('/api/*', function (req, res) {
-	db.put(req.path,req.body , function (err) {
+	db.put(req.path,req.body, function (err) {
 		var model = {};
 		model.input = req.body;
+
+		console.log('[POST] ' + req.path + ' = req.body = ' + JSON.stringify(req.body));
 
 		// Handle Error
   		if (err) {
@@ -56,12 +59,14 @@ app.post('/api/*', function (req, res) {
   			console.log('leveldb:' + new Date() + err);
   		}
 
+		console.log("[POST] " + req.path + " == " + req.body);
 		// Build the response
 		model.message = req.path + " saved.";
 		res.type('application/json');
 		res.json(model);
 	});
 });
+
 
 
 app.listen(3000);
