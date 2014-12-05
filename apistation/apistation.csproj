@@ -32,10 +32,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Nancy">
+    <Reference Include="Nancy, Version=0.23.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\Nancy.0.23.2\lib\net40\Nancy.dll</HintPath>
     </Reference>
-    <Reference Include="Nancy.Hosting.Self">
+    <Reference Include="Nancy.Hosting.Self, Version=0.23.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\Nancy.Hosting.Self.0.23.2\lib\net40\Nancy.Hosting.Self.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
@@ -54,8 +56,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiModule.cs" />
-    <Compile Include="ApiOptions.cs" />
+    <Compile Include="Modules\ApiModule.cs" />
+    <Compile Include="Options\ApiOptions.cs" />
     <Compile Include="Components\DataComponent.cs" />
     <Compile Include="Components\LogComponent.cs" />
     <Compile Include="Extensions.cs" />
@@ -69,6 +71,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

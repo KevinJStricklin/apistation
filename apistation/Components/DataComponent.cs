@@ -13,77 +13,9 @@ using apistation.Components;
 
 namespace apistation
 {
-   public class GetEventArgs : EventArgs
-    {
-        #region [ Properties ]
-        public JObject Model { get; private set; }
-
-        #endregion
-
-        #region [ Constructors ] 
-        public GetEventArgs(JObject Model) : base()
-        {
-            this.Model = Model;
-        }
-        #endregion
-    }
-    public class PostEventArgs : EventArgs
-    {
-        #region [ Properties ]
-        public JObject InputModel { get; private set; }
-        #endregion
-
-        #region [ Constructors ] 
-        public PostEventArgs(JObject InputModel) : base()
-        {
-            this.InputModel = InputModel;
-        }
-        #endregion
-    }
-
-    public static class DataComponentExtenisions
-    {
-        public static String sha256_hash(this String value)
-        {
-            StringBuilder Sb = new StringBuilder();
-
-            using (SHA256 hash = SHA256Managed.Create())
-            {
-                Encoding enc = Encoding.UTF8;
-                Byte[] result = hash.ComputeHash(enc.GetBytes(value));
-
-                foreach (Byte b in result)
-                    Sb.Append(b.ToString("x2"));
-            }
-
-            return Sb.ToString();
-        }
-    }
 
     public class DataComponent : apistation.IDataComponent
     {
-        #region [ Events ] 
-        public event EventHandler<GetEventArgs> GetEvent;
-
-        public event EventHandler PostEvent;
-
-        public event EventHandler PutEvent;
-
-        public event EventHandler DeleteEvent;
-        #endregion
-
-        #region [ Event Methods ] 
-        protected virtual void OnGet(GetEventArgs args)
-        {
-            EventHandler<GetEventArgs> handler = GetEvent;
-
-            if (handler != null)
-            {
-                handler(this, args);
-            }
-        }
-        #endregion
-
         #region [ Fields ]
         /// <summary>
         /// In memory simple database
@@ -112,9 +44,6 @@ namespace apistation
                         results.Add(o.Key, o.Value);
                     });
             }
-
-            // Event 
-            OnGet(new GetEventArgs(results));
 
             return results;
         }
@@ -148,7 +77,6 @@ namespace apistation
                 db.Add(path, input_model);
             }
 
-
             return results;
         }
 
@@ -167,5 +95,4 @@ namespace apistation
         }
         #endregion
     }
-
 }
