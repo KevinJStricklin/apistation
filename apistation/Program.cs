@@ -29,7 +29,7 @@ namespace apistation
 
         static void Main(string[] args)
         {
-            using (var host = new NancyHost(new Uri(Program.Options.HostUri)))
+            using (var host = new NancyHost(new Uri("http://localhost:1234")))
             {
                 host.Start();
                 Console.WriteLine("Hosting at {0}", Program.Options.HostUri);
