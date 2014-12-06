@@ -49,13 +49,10 @@ app.get('/api/*', function(req, res) {
 			console.log('leveldb:' + new Date() + err);
 		}
 
-		// Value
-		model.value = value;
-
-		console.log("[GET] " + req.path + " == " + model.value);
+		console.log("[GET] " + req.path + " == " + value);
 	  	// Build the response
 		res.type('application/json');
-		res.json(model);
+		res.json(value);
 	});
 });
 
@@ -72,7 +69,8 @@ app.post('/api/*', function (req, res) {
   			console.log('leveldb:' + new Date() + err);
   		}
 
-		console.log("[POST] " + req.path + " == " + req.body);
+        console.log("[POST] " + req.path + " == " + req.body);
+
 		// Build the response
 		model.message = req.path + " saved.";
 		res.type('application/json');
