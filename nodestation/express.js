@@ -1,15 +1,33 @@
+// ---------------------------------------------------------------
 // API STATION - LevelDb
-
+// ---------------------------------------------------------------
 
 // ---------------------------------------------------------------
 // Dependencies 
 // ---------------------------------------------------------------
 var express = require('express'),
-  bodyParser = require('body-parser');
+    bodyParser = require('body-parser'),
+    levelup = require('levelup');
 
-// levelDb 
-var levelup = require('levelup');
+
+
+
+// ---------------------------------------------------------------
+// Databases 
+// ---------------------------------------------------------------
 var db = levelup('./sysdb',{ valueEncoding: 'json'});
+
+// ---------------------------------------------------------------
+// Middleware 
+// ---------------------------------------------------------------
+// CORS Middleware Object 
+var CORS_Middleware = function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+}
+
 
 
 // ---------------------------------------------------------------
@@ -17,9 +35,10 @@ var db = levelup('./sysdb',{ valueEncoding: 'json'});
 // ---------------------------------------------------------------
 var app = express();
 app.use(bodyParser.json());
+app.use(CORS_Middleware);
+var security = {}; // --make this a new module 
 
-var security = {}; // Require a new module  
-// Role is a name and a path expression.
+
 
 
 
@@ -66,7 +85,6 @@ app.post('/api/*', function (req, res) {
 		res.json(model);
 	});
 });
-
 
 
 app.listen(3000);
