@@ -1,0 +1,29 @@
+{
+  "name": "nodestation",
+  "version": "0.0.1",
+  "description": "NodeJS Express leveldb API Database",
+  "main": "express.js",
+  "dependencies": {
+    "body-parser": "^1.10.0",
+    "express": "^4.0.0",
+    "redis": "^0.12.1"
+  },
+  "scripts": {
+    "test": "express.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/rexwhitten/apistation"
+  },
+  "keywords": [
+    "api",
+    "json",
+    "rest"
+  ],
+  "author": "Rex Whitten",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rexwhitten/apistation/issues"
+  },
+  "homepage": "https://github.com/rexwhitten/apistation"
+}
