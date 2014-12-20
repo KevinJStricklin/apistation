@@ -1,43 +1,94 @@
 ﻿/// <reference path="bower_components/jquery/dist/jquery.js" />
 
+/// Base Server Path
+function Client(Path) {
+    this.Path = Path;
+    
+    /// Run AJAX Client Setup Here 
+    $.ajaxSetup({
+        url: this.Path,
+        contentType: "application/json",
+        crossDomain: true,
+        dataType: 'json',
+        statusCode: {
+            404: function () {
+                console.log("Resource Client: 404");
+            },
+            500: function () {
+                console.log("Resource Client: 500");
+            }
+        }
+    });
+}
 
-var Client = {};
 
-
+// Resource Object Client 
 function Resource(Path) {
     this.path = Path;
-    this.publicId = 0;
+    this.Value = {};
+
+    /// Run AJAX Client Setup Here 
+    $.ajaxSetup({
+        url: "http://localhost:3020" + this.path,
+        contentType: "application/json",
+        crossDomain: true,
+        dataType: 'json',
+        statusCode: {
+            404: function () {
+                console.log("Resource Client: 404");
+            },
+            500: function () {
+                console.log("Resource Client: 500");
+            }
+        }
+    });
+
+
 }
 
-Resource.prototype.getIdentifier = function () {
-    return this.publicId + ":" + this.path;
-}
 
+// HTTP Methods
 Resource.prototype.Get = function (complete_callback) {
-    if (complete_callback) {
-        complete_callback(this);
-    }
+    var self = this;
+
+    $.ajax({
+        type: "GET"
+    }).done(function (data) {
+        self.Value = data;
+        // Callback
+        if (complete_callback) {
+            complete_callback(self);
+        }
+        return self;
+    });
 };
 
 Resource.prototype.Post = function (complete_callback) {
-    if (complete_callback) {
-        complete_callback(this);
-    }
+    var self = this;
+
+    $.ajax({
+        type: "POST",
+        data : self.Value
+    }).done(function (data) {
+        // Callback
+        if (complete_callback) {
+            complete_callback(self);
+        }
+    });
+
+    return self;
 };
 
 Resource.prototype.Put = function (complete_callback) {
-    if (complete_callback) {
-        complete_callback(this);
-    }
+    $.ajax({
+        type: "PUT"
+    });
+
 };
 
 Resource.prototype.Delete = function (complete_callback) {
-    if (complete_callback) {
-        complete_callback(this);
-    }
+    $.ajax({
+        type: "DELETE"
+    });
 };
 
-
-Client.Resource = Resource;
-
-var t = new Client.Resource("/");

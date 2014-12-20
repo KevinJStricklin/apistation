@@ -2,15 +2,22 @@
 <html>
 <head>
     <title></title>
-
+    
 </head>
 <body>
     <div id="view"></div>
+    <input id="resource_path" type="text" />
+    <br />
+    <textarea id="editor">
+
+    </textarea>
+    <a href="#" id="save">Save</a>
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="client.js"></script>
     <script type="text/javascript">
-        var c = new client("/api/test");
-        console.log('client loaded');
+        var c = new Client("http://localhost:3020");
+
+        
     </script>
 </body>
 </html>
