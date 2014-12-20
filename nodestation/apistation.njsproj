@@ -19,21 +19,25 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
+    <Compile Include="components\identity\identity.js" />
+    <Compile Include="components\cache\cache.js" />
+    <Compile Include="components\index.js" />
+    <Compile Include="components\resources\resources.js" />
     <Compile Include="middleware\authentication\index.js" />
     <Compile Include="middleware\cors\index.js" />
     <Compile Include="middleware\messaging\index.js" />
     <Compile Include="middleware\monitoring\index.js" />
     <Compile Include="middleware\session\index.js" />
-    <Compile Include="models\user.js" />
+    <Compile Include="models\index.js" />
     <Compile Include="routes\api\api.js" />
-    <Compile Include="routes\auth\auth.js" />
-    <Compile Include="routes\controller.type.js" />
-    <Compile Include="routes\file\file.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="server.js" />
     <Compile Include="middleware\index.js" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="components\cache\" />
+    <Folder Include="components\identity\" />
+    <Folder Include="components\resources\" />
     <Folder Include="middleware" />
     <Folder Include="middleware\authentication\" />
     <Folder Include="middleware\monitoring\" />
@@ -41,10 +45,10 @@
     <Folder Include="middleware\cors\" />
     <Folder Include="middleware\session\" />
     <Folder Include="models\" />
+    <Folder Include="components\" />
+    <Folder Include="types\" />
     <Folder Include="routes\" />
     <Folder Include="routes\api\" />
-    <Folder Include="routes\auth\" />
-    <Folder Include="routes\file\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="package.json" />
