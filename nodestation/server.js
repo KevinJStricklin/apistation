@@ -64,6 +64,11 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// set the view engine to ejs
+app.set('view engine', 'ejs');
+// Client 
+app.use(express.static(__dirname + '/client'));
+
 // Express Middleware
 // ---------------------------------------------------------------------------------------------------------
 var middleware = require('./middleware/index.js').Middleware({
@@ -81,7 +86,18 @@ for (var package_entry in middleware) {
 var router = express.Router(); 				// get an instance of the express Router
 
 router.get('/', function (req, res) {
-    res.json({ message: 'nodestation is active' });
+    var model = {}; // Primary View
+    
+    // Model/User
+    if (req.user) {
+        model.user = req.user;
+    }
+    
+    // Model/Map
+    model.map = {};
+    
+
+    res.render('pages/index', model);
 });
 
 router.get('/auth', function (req, res) {

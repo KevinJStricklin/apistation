@@ -19,6 +19,17 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
+    <Compile Include="client\lib\headjs\js\head.core.js" />
+    <Compile Include="client\lib\headjs\js\head.core.min.js" />
+    <Compile Include="client\lib\headjs\js\head.css3.js" />
+    <Compile Include="client\lib\headjs\js\head.css3.min.js" />
+    <Compile Include="client\lib\headjs\js\head.js" />
+    <Compile Include="client\lib\headjs\js\head.load.js" />
+    <Compile Include="client\lib\headjs\js\head.load.min.js" />
+    <Compile Include="client\lib\headjs\js\head.min.js" />
+    <Compile Include="client\lib\index.js" />
+    <Compile Include="client\lib\jquery\js\jquery.js" />
+    <Compile Include="client\lib\jquery\js\jquery.min.js" />
     <Compile Include="components\identity\identity.js" />
     <Compile Include="components\cache\cache.js" />
     <Compile Include="components\index.js" />
@@ -35,6 +46,14 @@
     <Compile Include="middleware\index.js" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="client\lib\" />
+    <Folder Include="client\lib\bootstrap\" />
+    <Folder Include="client\lib\bootstrap\css\" />
+    <Folder Include="client\lib\bootstrap\js\" />
+    <Folder Include="client\lib\headjs\js\" />
+    <Folder Include="client\lib\jquery\" />
+    <Folder Include="client\lib\headjs\" />
+    <Folder Include="client\lib\jquery\js\" />
     <Folder Include="components\cache\" />
     <Folder Include="components\identity\" />
     <Folder Include="components\resources\" />
@@ -46,12 +65,31 @@
     <Folder Include="middleware\session\" />
     <Folder Include="models\" />
     <Folder Include="components\" />
-    <Folder Include="types\" />
+    <Folder Include="client\" />
+    <Folder Include="views\" />
     <Folder Include="routes\" />
     <Folder Include="routes\api\" />
+    <Folder Include="views\pages\" />
+    <Folder Include="views\resources\" />
+    <Folder Include="views\partials\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="client\lib\bootstrap\css\bootstrap-theme.css" />
+    <Content Include="client\lib\bootstrap\css\bootstrap-theme.css.map" />
+    <Content Include="client\lib\bootstrap\css\bootstrap-theme.min.css" />
+    <Content Include="client\lib\bootstrap\css\bootstrap.css" />
+    <Content Include="client\lib\bootstrap\css\bootstrap.css.map" />
+    <Content Include="client\lib\bootstrap\css\bootstrap.min.css" />
+    <Content Include="client\lib\headjs\js\head.core.min.js.map" />
+    <Content Include="client\lib\headjs\js\head.css3.min.js.map" />
+    <Content Include="client\lib\headjs\js\head.load.min.js.map" />
+    <Content Include="client\lib\headjs\js\head.min.js.map" />
+    <Content Include="client\lib\jquery\js\jquery.min.map" />
     <Content Include="package.json" />
+    <Content Include="views\pages\index.ejs" />
+    <Content Include="views\partials\footer.ejs" />
+    <Content Include="views\partials\head.ejs" />
+    <Content Include="views\partials\header.ejs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
