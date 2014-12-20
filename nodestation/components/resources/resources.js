@@ -4,76 +4,50 @@ var Resources = function (options) {
     var self = {};
     
     // Dependencies 
-    var levelup = require('levelup');
-    
-    self.db = levelup('./default');
-    
+    var Storage = require('fs-storage');
+    self._store =  new Storage('./default/');
+
     if (options.db_path) {
-        self.db = levelup(options.db_path);
+        self._store = new Storage(options.db_path);
     }
     
     self.Get = function (path, result_callback) {
-        self.db.get(path, function (err, value) {
-            var result = {};
-            
-            if (err) {
-                console.log("[leveldb] [error] " + err);
-                result.error = err;
-            }
-            
-            if (value) {
-                result = value;
-            }
+        var result = {};
 
-            if (result_callback) {
-                result_callback(result);
-            }
-        });
+        if (result_callback) {
+            result = self._store.getItem(path);
+            result_callback(result);
+        }
     };
     
     self.Put = function (path, value, result_callback) {
-        self.db.put(path, value, function (err) {
-            var result = {};
-            
-            if (err) {
-                console.log("[leveldb] [error] " + err);
-                result.error = err;
-            }
+        var result = {};
 
-            if (result_callback) {
-                result_callback(result);
-            }
-        });
+        self._store.setItem(path, value);
+
+        if (result_callback) {
+            result_callback(result);
+        }
     };
     
     self.Post = function (path, value, result_callback) {
-        self.db.put(path, value, function (err) {
-            var result = {};
-            
-            if (err) {
-                console.log("[leveldb] [error] " + err);
-                result.error = err;
-            }
-            
-            if (result_callback) {
-                result_callback(result);
-            }
-        });
+        var result = {};
+        console.log(value);
+        self._store.setItem(path, value);
+        
+        if (result_callback) {
+            result_callback(result);
+        }
     };
     
     self.Delete = function (path, result_callback) {
-        self.db.del(path, function (err) {
-            var result = {};
-            
-            if (err) {
-                console.log("[leveldb] [error] " + err);
-                result.error = err;
-            }
-            
-            if (result_callback) {
-                result_callback(result);
-            }
-        });
+        var result = {};
+        
+        self._store.removeItem(path);
+        
+        if (result_callback) {
+            result_callback(result);
+        }
     };
 
 

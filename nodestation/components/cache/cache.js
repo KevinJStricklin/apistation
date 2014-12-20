@@ -19,6 +19,7 @@ var Cache = function (options) {
             // Handle Error
             if (err) {
                 console.log('/redis/error/' + req.path + "/" + new Date() + " : " + err);
+                result.error = err;
             }
             
             if (value) {
@@ -38,6 +39,7 @@ var Cache = function (options) {
             // Handle Error
             if (err) {
                 console.log('/redis/error/' + req.path + "/" + new Date() + " : " + err);
+                result.error = err;
             }
             
             if (value) {
