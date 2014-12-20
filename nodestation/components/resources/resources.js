@@ -2,16 +2,28 @@
 
 var Resources = function (options) {
     var self = {};
-    
+
+    self.options = options;	    
+
     // Dependencies 
-    var Storage = require('fs-storage');
-    self._store =  new Storage('./default/');
+    var levelup = require('levelup');
+    self._db = levelup('./default');
 
     if (options.db_path) {
-        self._store = new Storage(options.db_path);
+       self._db = levelup(options.db_path);
     }
     
     self.Get = function (path, result_callback) {
+	self._db.get(path, function (err,reply){
+	   var result = {};
+	   
+           if(err){
+	     result.error = err;
+           };
+
+	   result = reply;
+	   return result;
+	});
         var result = {};
 
         if (result_callback) {
