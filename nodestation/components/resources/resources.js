@@ -14,54 +14,64 @@ var Resources = function (options) {
     }
     
     self.Get = function (path, result_callback) {
-	self._db.get(path, function (err,reply){
-	   var result = {};
-	   
-           if(err){
-	     result.error = err;
-           };
-
-	   result = reply;
-	   return result;
-	});
-        var result = {};
-
-        if (result_callback) {
-            result = self._store.getItem(path);
-            result_callback(result);
-        }
+	    self._db.get(path, function (err,reply) {
+            var result = {};
+            
+            if (err) {
+                result.error = err;
+            }
+            
+            if (reply) {
+                result = reply;
+            }
+            
+            if (result_callback) {
+                result_callback(result);
+            }
+	    });     
     };
     
     self.Put = function (path, value, result_callback) {
-        var result = {};
-
-        self._store.setItem(path, value);
-
-        if (result_callback) {
-            result_callback(result);
-        }
+        self._db.set(path, value, function (err, reply) {
+            var result = {};
+            
+            if (err) {
+                result.error = err;
+            }
+            
+            if (result_callback) {
+                result_callback(result);
+            }
+        });
     };
     
     self.Post = function (path, value, result_callback) {
-        var result = {};
-        console.log(value);
-        self._store.setItem(path, value);
-        
-        if (result_callback) {
-            result_callback(result);
-        }
+        self._db.set(path, value, function (err, reply) {
+            var result = {};
+            
+            if (err) {
+                result.error = err;
+            }
+            
+            if (result_callback) {
+                result_callback(result);
+            }
+        });
     };
     
     self.Delete = function (path, result_callback) {
-        var result = {};
-        
-        self._store.removeItem(path);
-        
-        if (result_callback) {
-            result_callback(result);
-        }
+        self._db.del(path, function (err) {
+            var result = {};
+            
+            if (err) {
+                result.error = err;
+            }
+            
+            if (result_callback) {
+                result_callback(result);
+            }
+        });
     };
-
 
     return self;
 };
