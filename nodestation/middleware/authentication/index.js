@@ -10,19 +10,18 @@
 var Authentication = function (req, res, next) {
     var status = {};
     status.type = "Authentication";
+    status.authenticated = req.isAuthenticated()
     
-    if (req.user == undefined) {
-        req.user = {
-            "id" : 0,
-             "client" : req.cookies["connect.sid"]
+    if (req.path == "/auth") {
+        console.log("on /auth  skipping ...");
+    } else {
+        if (!status.authenticated) {
+            res.status(401).send('Unauthorized');
+            // TODO: Subcribe to a channel in Redis to fire off a blocker program (uwf block, or csw)
         }
     }
-    
-    if (req.query.auth) {
-        console.log("[auth.token] " + req.query.auth);
-    }
 
-    console.log(req.user);
+    console.log(status);
     next();
 };
 

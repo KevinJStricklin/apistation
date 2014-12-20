@@ -4,7 +4,7 @@
 // server.js
 // ---------------------------------------------------------------------------------------------------------
 
-// call the packages we need
+// Thrid Party Packages
 // ---------------------------------------------------------------------------------------------------------
 var express = require('express'); 		// call express
 var app = express(); 				// define our app using express
@@ -12,7 +12,46 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var passport = require('passport');
 var session = require('express-session');
+var LocalStrategy = require('passport-local').Strategy;
 
+// Application Options
+// ---------------------------------------------------------------------------------------------------------
+var options = {
+    port: 3020,
+    title: "API v1.0",
+    environment: "DEV",
+    // Reids Options
+    redis : { enabled: true }
+};
+
+// Application Identity
+// ---------------------------------------------------------------------------------------------------------
+var Identity = require('./components/identity/identity.js').Package(options);
+
+// Passport Local Setup
+// ---------------------------------------------------------------------------------------------------------
+passport.serializeUser(function (user, done) {
+    done(null, user.id);
+});
+
+passport.deserializeUser(function (id, done) {
+    Identity.findById(id, function (err, user) {
+        done(err, user);
+    });
+});
+
+passport.use(new LocalStrategy(
+        function (username, password, done) {
+            process.nextTick(function () {
+                Identity.findByUsername(username, function (err, user) {
+                    if (err) { return done(err); }
+                    if (!user) { return done(null, false, { message: 'Unknown user ' + username }); }
+                    if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
+                    return done(null, user);
+                })
+            });
+        }
+));
 
 // Express Application Configuration
 // ---------------------------------------------------------------------------------------------------------
@@ -20,16 +59,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); 
 app.use(cookieParser());
 app.use(session({
-        secret: 'keyboard cat',
-        resave: false,
-        saveUninitialized: true
+        secret: 'keyboard cat'
     }));
 app.use(passport.initialize());
-
-
-var port = process.env.PORT || 3020; 		// set our port
+app.use(passport.session());
 
 // Express Middleware
+// ---------------------------------------------------------------------------------------------------------
 var middleware = require('./middleware/index.js').Middleware({
     debug_logging : true
 });
@@ -40,42 +76,55 @@ for (var package_entry in middleware) {
 }
 
 
-// Define the Options graph for the API's sub strcuture
-// ============================================================================
-var options = {
-    title: "API v1.0",
-    environment: "DEV"
-};
-
-
-
-
-// ROUTES FOR THE API
-// =============================================================================
+// Server Routes
+// ---------------------------------------------------------------------------------------------------------
 var router = express.Router(); 				// get an instance of the express Router
 
-// Controllers
-// =============================================================================
-var controllers = require('./routes/index.js').Controllers(options);
-
-app.use("/api", controllers.api);
-app.use("/auth", controllers.auth);
-app.use("/file", controllers.file);
-
-
-console.log("that was the prototype");
-
-// test route to make sure everything is working (accessed at GET http://localhost:3000/api)
 router.get('/', function (req, res) {
     res.json({ message: 'nodestation is active' });
 });
 
-// REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
+router.get('/auth', function (req, res) {
+    var access_tag = {};
+    
+    access_tag.ttl = 5000;
+    if (req.user) {
+        access_tag.path = req.user.username;
+    }
+    access_tag.authenticated = req.isAuthenticated();
+    
+    res.json(access_tag);
+});
+
+router.post('/auth', 
+    passport.authenticate('local', { failureRedirect: '/auth', failureFlash: false }), function (req, res) {
+    var access_tag = {};
+    
+    access_tag.ttl = 5000;
+    if (req.user) {
+        access_tag.path = req.user.username;
+    }
+    access_tag.authenticated = req.isAuthenticated();
+
+    res.json(access_tag);
+});
+
+
+router.get('/logout', function (req, res) {
+    req.logout();
+    res.redirect('/');
+});
+
 app.use('/', router);
 
+// Api Routes
+// ---------------------------------------------------------------------------------------------------------
+var api = require('./routes/api/api.js').Package;
+app.use('/api', api());
 
-// START THE SERVER
-// =============================================================================
-app.listen(port);
-console.log('nodestation is running at ' + port);
+
+
+// Start the Server
+// ---------------------------------------------------------------------------------------------------------
+app.listen(options.port);
+console.log('apistation is running at ' + options.port);
