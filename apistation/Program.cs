@@ -14,17 +14,13 @@ namespace apistation
         protected override void ConfigureConventions(NancyConventions conventions)
         {
             base.ConfigureConventions(conventions);
-
-            conventions.StaticContentsConventions.Add(
-                StaticContentConventionBuilder.AddDirectory("Content", @"Content")
-            );
         }
     }
 
     public class Program
     {
         #region [ Options ]
-        public static ApiOptions Options = new ApiOptions();
+        public static String RESOURCE_STORAGE_PATH = @"C:\Data\";
         #endregion
 
         static void Main(string[] args)
@@ -32,7 +28,7 @@ namespace apistation
             using (var host = new NancyHost(new Uri("http://localhost:1234")))
             {
                 host.Start();
-                Console.WriteLine("Hosting at {0}", Program.Options.HostUri);
+                Console.WriteLine("Hosting at {0}", "http://localhost:1234");
                 Console.ReadLine();
             }
         }
