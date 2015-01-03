@@ -26,6 +26,8 @@ namespace apistation
 
         static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
             string host_listen_path = ConfigurationManager.AppSettings["host.listenpath"];
 
             using (var host = new NancyHost(new Uri(host_listen_path)))
@@ -34,6 +36,11 @@ namespace apistation
                 Console.WriteLine("Hosting at {0}", host_listen_path);
                 Console.ReadLine();
             }
+        }
+
+        static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Console.WriteLine("ERROR: " + ((Exception)e.ExceptionObject).Message);
         }
     }
 }
