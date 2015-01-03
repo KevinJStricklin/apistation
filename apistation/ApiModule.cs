@@ -50,7 +50,7 @@ namespace apistation
             {
                 // Logging 
                 Console.WriteLine(String.Format("{1} {0}", Request.Path, Request.Method));
-
+                try { 
                 #region [ HTTP GET ] 
                 Hashtable response_obj = new Hashtable();
                 string path = Request.Path;
@@ -71,6 +71,14 @@ namespace apistation
 
                 return Response.AsJson(response_obj, HttpStatusCode.OK);
                 #endregion
+                }
+                catch (Exception x)
+                {
+                    Console.WriteLine(String.Format("ERROR : {0}", x.Message));
+                    Hashtable error_model = new Hashtable();
+                    error_model.Add("error", x.Message);
+                    return Response.AsJson(error_model, HttpStatusCode.InternalServerError);
+                }
             };
 
             Post[api_route] = _ =>
@@ -78,28 +86,38 @@ namespace apistation
                 // Logging 
                 Console.WriteLine(String.Format("{1} {0}", Request.Path, Request.Method));
 
-                #region [ HTTP POST ]
-                Hashtable response_obj = new Hashtable();
-                string resource_path = String.Format("{0}/{1}", ConfigurationManager.AppSettings["api.resource.path"], Request.Path.Replace("/", "_"));
-
-                if (this.Authenticated(Request))
+                try
                 {
-                    if (File.Exists(resource_path))
-                    {
-                        // Update
-                        File.WriteAllText(resource_path, Request.Body.ReadAsString());
-                        response_obj.Add("resource.action", "update");
-                    }
-                    else
-                    {
-                        // Create
-                        File.WriteAllText(resource_path, Request.Body.ReadAsString());
-                        response_obj.Add("resource.action", "create");
-                    }
-                }
+                    #region [ HTTP POST ]
+                    Hashtable response_obj = new Hashtable();
+                    string resource_path = String.Format("{0}/{1}", ConfigurationManager.AppSettings["api.resource.path"], Request.Path.Replace("/", "_"));
 
-                return Response.AsJson(response_obj, HttpStatusCode.OK);
-                #endregion
+                    if (this.Authenticated(Request))
+                    {
+                        if (File.Exists(resource_path))
+                        {
+                            // Update
+                            File.WriteAllText(resource_path, Request.Body.ReadAsString());
+                            response_obj.Add("resource.action", "update");
+                        }
+                        else
+                        {
+                            // Create
+                            File.WriteAllText(resource_path, Request.Body.ReadAsString());
+                            response_obj.Add("resource.action", "create");
+                        }
+                    }
+
+                    return Response.AsJson(response_obj, HttpStatusCode.OK);
+                    #endregion
+                }
+                catch (Exception x)
+                {
+                    Console.WriteLine(String.Format("ERROR : {0}", x.Message));
+                    Hashtable error_model = new Hashtable();
+                    error_model.Add("error", x.Message);
+                    return Response.AsJson(error_model, HttpStatusCode.InternalServerError);
+                }
             };
 
             Put[api_route] = _ =>
@@ -107,6 +125,7 @@ namespace apistation
                 // Logging 
                 Console.WriteLine(String.Format("{1} {0}", Request.Path, Request.Method));
 
+                try { 
                 #region [ HTTP PUT ]
                 Hashtable response_obj = new Hashtable();
                 string resource_path = String.Format("{0}/{1}", ConfigurationManager.AppSettings["api.resource.path"], Request.Path.Replace("/", "_"));
@@ -129,6 +148,14 @@ namespace apistation
 
                 return Response.AsJson(response_obj, HttpStatusCode.OK);
                 #endregion
+                }
+                catch (Exception x)
+                {
+                    Console.WriteLine(String.Format("ERROR : {0}", x.Message));
+                    Hashtable error_model = new Hashtable();
+                    error_model.Add("error", x.Message);
+                    return Response.AsJson(error_model, HttpStatusCode.InternalServerError);
+                }
             };
 
             Delete[api_route] = _ =>
@@ -136,6 +163,7 @@ namespace apistation
                 // Logging 
                 Console.WriteLine(String.Format("{1} {0}", Request.Path, Request.Method));
 
+                try { 
                 #region [ HTTP DELETE ]
                 Hashtable response_obj = new Hashtable();
 
@@ -146,6 +174,14 @@ namespace apistation
 
                 return Response.AsJson(response_obj, HttpStatusCode.OK);
                 #endregion
+                }
+                catch (Exception x)
+                {
+                    Console.WriteLine(String.Format("ERROR : {0}", x.Message));
+                    Hashtable error_model = new Hashtable();
+                    error_model.Add("error", x.Message);
+                    return Response.AsJson(error_model, HttpStatusCode.InternalServerError);
+                }
             };
         }
         #endregion
