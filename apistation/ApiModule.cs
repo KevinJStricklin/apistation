@@ -54,11 +54,11 @@ namespace apistation
                 #region [ HTTP GET ] 
                 Hashtable response_obj = new Hashtable();
                 string path = Request.Path;
-                string resource_path = String.Format("{0}/{1}",Program.RESOURCE_STORAGE_PATH, Request.Path.Replace("/","_"));
+                string resource_path = String.Format("{0}/{1}", ConfigurationManager.AppSettings["api.resource.path"], Request.Path.Replace("/", "_"));
 
                 if (this.Authenticated(Request))
                 {
-                        var resources = (new DirectoryInfo(Program.RESOURCE_STORAGE_PATH))
+                    var resources = (new DirectoryInfo(ConfigurationManager.AppSettings["api.resource.path"]))
                                                                   .GetFiles("*.*", SearchOption.AllDirectories)
                                                                   .Where(file => file.Name.Replace("_", "/").StartsWith(Request.Path))
                                                                   .Select(json_file => File.ReadAllText(json_file.FullName))
@@ -80,7 +80,7 @@ namespace apistation
 
                 #region [ HTTP POST ]
                 Hashtable response_obj = new Hashtable();
-                string resource_path = String.Format("{0}/{1}",Program.RESOURCE_STORAGE_PATH, Request.Path.Replace("/","_"));
+                string resource_path = String.Format("{0}/{1}", ConfigurationManager.AppSettings["api.resource.path"], Request.Path.Replace("/", "_"));
 
                 if (this.Authenticated(Request))
                 {
@@ -109,7 +109,7 @@ namespace apistation
 
                 #region [ HTTP PUT ]
                 Hashtable response_obj = new Hashtable();
-                string resource_path = String.Format("{0}/{1}", Program.RESOURCE_STORAGE_PATH, Request.Path.Replace("/", "_"));
+                string resource_path = String.Format("{0}/{1}", ConfigurationManager.AppSettings["api.resource.path"], Request.Path.Replace("/", "_"));
 
                 if (this.Authenticated(Request))
                 {

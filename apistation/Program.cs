@@ -3,6 +3,7 @@ using Nancy.Conventions;
 using Nancy.Hosting.Self;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,15 +21,17 @@ namespace apistation
     public class Program
     {
         #region [ Options ]
-        public static String RESOURCE_STORAGE_PATH = @"C:\Data\";
+     
         #endregion
 
         static void Main(string[] args)
         {
-            using (var host = new NancyHost(new Uri("http://localhost:1234")))
+            string host_listen_path = ConfigurationManager.AppSettings["host.listenpath"];
+
+            using (var host = new NancyHost(new Uri(host_listen_path)))
             {
                 host.Start();
-                Console.WriteLine("Hosting at {0}", "http://localhost:1234");
+                Console.WriteLine("Hosting at {0}", host_listen_path);
                 Console.ReadLine();
             }
         }
