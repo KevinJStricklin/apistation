@@ -12,6 +12,20 @@ namespace apistation
 {
     public class CustomBoostrapper : DefaultNancyBootstrapper
     {
+        protected override void RequestStartup(Nancy.TinyIoc.TinyIoCContainer container, Nancy.Bootstrapper.IPipelines pipelines, NancyContext context)
+        {
+            base.RequestStartup(container, pipelines, context);
+
+            //CORS Enable
+            pipelines.AfterRequest.AddItemToEndOfPipeline((ctx) =>
+            {
+                ctx.Response.WithHeader("Access-Control-Allow-Origin", "*")
+                            .WithHeader("Access-Control-Allow-Methods", "POST,GET,PUT,DELETE")
+                            .WithHeader("Access-Control-Allow-Headers", "Accept, Origin, Content-type");
+
+            });
+        }
+
         protected override void ConfigureConventions(NancyConventions conventions)
         {
             base.ConfigureConventions(conventions);

@@ -41,7 +41,7 @@ namespace apistation
         #endregion
 
         #region [ Constructor ]
-        public ApiModule ()
+        public ApiModule()
             : base(ConfigurationManager.AppSettings["api.base.route"])
         {
             string api_route = "/{path*}";
@@ -50,27 +50,28 @@ namespace apistation
             {
                 // Logging 
                 Console.WriteLine(String.Format("{1} {0}", Request.Path, Request.Method));
-                try { 
-                #region [ HTTP GET ] 
-                Hashtable response_obj = new Hashtable();
-                string path = Request.Path;
-                string resource_path = String.Format("{0}/{1}", ConfigurationManager.AppSettings["api.resource.path"], Request.Path.Replace("/", "_"));
-
-                if (this.Authenticated(Request))
+                try
                 {
-                    var resources = (new DirectoryInfo(ConfigurationManager.AppSettings["api.resource.path"]))
-                                                                  .GetFiles("*.*", SearchOption.AllDirectories)
-                                                                  .Where(file => file.Name.Replace("_", "/").StartsWith(Request.Path))
-                                                                  .Select(json_file => File.ReadAllText(json_file.FullName))
-                                                                  .Select(json => JObject.Parse(json));
-                    if (resources.Any())
-                    {
-                        response_obj.Add("results", resources);
-                    }
-                }
+                    #region [ HTTP GET ]
+                    Hashtable response_obj = new Hashtable();
+                    string path = Request.Path;
+                    string resource_path = String.Format("{0}/{1}", ConfigurationManager.AppSettings["api.resource.path"], Request.Path.Replace("/", "_"));
 
-                return Response.AsJson(response_obj, HttpStatusCode.OK);
-                #endregion
+                    if (this.Authenticated(Request))
+                    {
+                        var resources = (new DirectoryInfo(ConfigurationManager.AppSettings["api.resource.path"]))
+                                                                      .GetFiles("*.*", SearchOption.AllDirectories)
+                                                                      .Where(file => file.Name.Replace("_", "/").StartsWith(Request.Path))
+                                                                      .Select(json_file => File.ReadAllText(json_file.FullName))
+                                                                      .Select(json => JObject.Parse(json));
+                        if (resources.Any())
+                        {
+                            response_obj.Add("results", resources);
+                        }
+                    }
+
+                    return Response.AsJson(response_obj, HttpStatusCode.OK);
+                    #endregion
                 }
                 catch (Exception x)
                 {
@@ -125,29 +126,30 @@ namespace apistation
                 // Logging 
                 Console.WriteLine(String.Format("{1} {0}", Request.Path, Request.Method));
 
-                try { 
-                #region [ HTTP PUT ]
-                Hashtable response_obj = new Hashtable();
-                string resource_path = String.Format("{0}/{1}", ConfigurationManager.AppSettings["api.resource.path"], Request.Path.Replace("/", "_"));
-
-                if (this.Authenticated(Request))
+                try
                 {
-                    if (File.Exists(resource_path))
-                    {
-                        // Update
-                        File.WriteAllText(resource_path, Request.Body.ReadAsString());
-                        response_obj.Add("resource.action", "update");
-                    }
-                    else
-                    {
-                        // Create
-                        File.WriteAllText(resource_path, Request.Body.ReadAsString());
-                        response_obj.Add("resource.action", "create");
-                    }
-                }
+                    #region [ HTTP PUT ]
+                    Hashtable response_obj = new Hashtable();
+                    string resource_path = String.Format("{0}/{1}", ConfigurationManager.AppSettings["api.resource.path"], Request.Path.Replace("/", "_"));
 
-                return Response.AsJson(response_obj, HttpStatusCode.OK);
-                #endregion
+                    if (this.Authenticated(Request))
+                    {
+                        if (File.Exists(resource_path))
+                        {
+                            // Update
+                            File.WriteAllText(resource_path, Request.Body.ReadAsString());
+                            response_obj.Add("resource.action", "update");
+                        }
+                        else
+                        {
+                            // Create
+                            File.WriteAllText(resource_path, Request.Body.ReadAsString());
+                            response_obj.Add("resource.action", "create");
+                        }
+                    }
+
+                    return Response.AsJson(response_obj, HttpStatusCode.OK);
+                    #endregion
                 }
                 catch (Exception x)
                 {
@@ -163,17 +165,18 @@ namespace apistation
                 // Logging 
                 Console.WriteLine(String.Format("{1} {0}", Request.Path, Request.Method));
 
-                try { 
-                #region [ HTTP DELETE ]
-                Hashtable response_obj = new Hashtable();
-
-                if (this.Authenticated(Request))
+                try
                 {
+                    #region [ HTTP DELETE ]
+                    Hashtable response_obj = new Hashtable();
 
-                }
+                    if (this.Authenticated(Request))
+                    {
 
-                return Response.AsJson(response_obj, HttpStatusCode.OK);
-                #endregion
+                    }
+
+                    return Response.AsJson(response_obj, HttpStatusCode.OK);
+                    #endregion
                 }
                 catch (Exception x)
                 {
