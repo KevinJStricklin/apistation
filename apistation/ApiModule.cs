@@ -54,14 +54,13 @@ namespace apistation
                 {
                     #region [ HTTP GET ]
                     Hashtable response_obj = new Hashtable();
-                    string path = Request.Path;
-                    string resource_path = String.Format("{0}/{1}", ConfigurationManager.AppSettings["api.resource.path"], Request.Path.Replace("/", "_"));
+                    string path = Request.Path.Replace("/", "_");
+                    string resource_path = String.Format("{0}/{1}", ConfigurationManager.AppSettings["api.resource.path"], path);
 
                     if (this.Authenticated(Request))
                     {
                         var resources = (new DirectoryInfo(ConfigurationManager.AppSettings["api.resource.path"]))
-                                                                      .GetFiles("*.*", SearchOption.AllDirectories)
-                                                                      .Where(file => file.Name.Replace("_", "/").StartsWith(Request.Path))
+                                                                      .EnumerateFiles(path + "*", SearchOption.TopDirectoryOnly)
                                                                       .Select(json_file => File.ReadAllText(json_file.FullName))
                                                                       .Select(json => JObject.Parse(json));
                         if (resources.Any())
