@@ -19,6 +19,14 @@ namespace apistation
     using System.Collections.Concurrent;
     using System.Configuration;
 
+    public class Sample
+    {
+        public string Name { get; set; }
+        public string Id { get; set; }
+        public int number { get; set; }
+    }
+
+
     public class ApiModule : NancyModule
     {
         #region [ Static Cache ]
@@ -59,14 +67,66 @@ namespace apistation
 
                     if (this.Authenticated(Request))
                     {
+                        //var resources = (new DirectoryInfo(ConfigurationManager.AppSettings["api.resource.path"]))
+                        //                                              .EnumerateFiles(path + "*", SearchOption.TopDirectoryOnly)
+                        //                                              .Select(json_file => File.ReadAllText(json_file.FullName))
+                        //                                              .Select(json => JObject.Parse(json));
+
                         var resources = (new DirectoryInfo(ConfigurationManager.AppSettings["api.resource.path"]))
                                                                       .EnumerateFiles(path + "*", SearchOption.TopDirectoryOnly)
-                                                                      .Select(json_file => File.ReadAllText(json_file.FullName))
-                                                                      .Select(json => JObject.Parse(json));
-                        if (resources.Any())
+                                                                      .Select(json_file => File.ReadAllText(json_file.FullName));
+
+                        int numResourcesFound = resources.Count();
+                        if (numResourcesFound == 0)
+                            return Response.AsJson(new object(), HttpStatusCode.OK);
+                        else if (numResourcesFound == 1)
                         {
-                            response_obj.Add("results", resources);
+                            Response r = new Response { ContentType = "application/json",
+                                           StatusCode = HttpStatusCode.OK,
+                                           Contents = (stream) => {
+                                               byte[] data = Encoding.UTF8.GetBytes(resources.First());
+                                               stream.Write(data, 0, data.Length);
+                                           }
+                            };
+                            return r;
                         }
+                        else
+                        {
+                            return new Response
+                            {
+                                ContentType = "application/json",
+                                StatusCode = HttpStatusCode.OK,
+                                Contents = (stream) =>
+                                {
+                                    byte[] data;
+                                    byte[] comma = Encoding.UTF8.GetBytes(",");
+
+                                    bool first = true;
+                                    foreach (var s in resources)
+                                    {
+                                        if (first)
+                                        {
+                                            first = false;
+                                            data = Encoding.UTF8.GetBytes("[");
+                                            stream.Write(data, 0, data.Length);
+                                        }
+                                        else
+                                            stream.Write(comma, 0, comma.Length);
+
+                                        data = Encoding.UTF8.GetBytes(s);
+                                        stream.Write(data, 0, data.Length);
+                                    }
+
+                                    data = Encoding.UTF8.GetBytes("]");
+                                    stream.Write(data, 0, data.Length);
+                                }
+                            };
+                        }
+
+                        //if (resources.Any())
+                        //{
+                        //    response_obj.Add("results", resources);
+                        //}
                     }
 
                     return Response.AsJson(response_obj, HttpStatusCode.OK);
